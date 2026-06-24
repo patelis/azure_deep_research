@@ -1,0 +1,59 @@
+name: Deploy
+
+# Keyless OIDC deploy on every push to main (and manual dispatch), gated on a GitHub Environment.
+# Provisions infra (Bicep) -> builds/pushes the image + deploys the Container App -> the azd
+# postdeploy hook runs utils/sync_agents.py to create/update the agents from the latest prompts.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: dev
+    env:
+      AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      AZURE_ENV_NAME: ${{ vars.AZURE_ENV_NAME }}
+      AZURE_LOCATION: ${{ vars.AZURE_LOCATION }}
+      AZURE_PRINCIPAL_ID: ${{ vars.AZURE_PRINCIPAL_ID }}
+      AZURE_PRINCIPAL_TYPE: ServicePrincipal
+      API_KEYS: ${{ secrets.API_KEYS }}
+      BUDGET_ALERT_EMAILS: ${{ vars.BUDGET_ALERT_EMAILS }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      # Sync the workspace so the azd postdeploy hook can `uv run python utils/sync_agents.py`.
+      - name: uv sync (all workspace packages, frozen)
+        run: uv sync --all-packages --frozen
+
+      - name: Azure login (OIDC)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Install azd
+        uses: Azure/setup-azd@v2
+
+      - name: azd login (OIDC)
+        run: |
+          azd auth login \
+            --client-id "$AZURE_CLIENT_ID" \
+            --tenant-id "$AZURE_TENANT_ID" \
+            --federated-credential-provider github
+
+      - name: Provision + deploy + sync agents
+        run: azd up --no-prompt

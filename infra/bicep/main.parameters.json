@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": { "value": "${AZURE_ENV_NAME}" },
+    "location": { "value": "${AZURE_LOCATION}" },
+    "principalId": { "value": "${AZURE_PRINCIPAL_ID}" },
+    "principalType": { "value": "${AZURE_PRINCIPAL_TYPE=User}" },
+    "mainModel": { "value": "${MAIN_MODEL=gpt-4.1}" },
+    "miniModel": { "value": "${MINI_MODEL=gpt-4.1-mini}" },
+    "enableMonitoring": { "value": "${ENABLE_MONITORING=true}" },
+    "enableBudget": { "value": "${ENABLE_BUDGET=true}" },
+    "budgetAmount": { "value": "${BUDGET_AMOUNT=20}" },
+    "budgetAlertEmails": { "value": "${BUDGET_ALERT_EMAILS=[]}" },
+    "containerImage": { "value": "${SERVICE_APP_IMAGE_NAME=}" },
+    "apiKeys": { "value": "${API_KEYS=}" },
+    "enableApiKeyTable": { "value": "${ENABLE_API_KEY_TABLE=false}" },
+    "maxRunsPerKeyPerDay": { "value": "${MAX_RUNS_PER_KEY_PER_DAY=3}" },
+    "maxSubagentsPerRun": { "value": "${MAX_SUBAGENTS_PER_RUN=5}" },
+    "maxParallelResearchers": { "value": "${MAX_PARALLEL_RESEARCHERS=3}" },
+    "maxDelegationRounds": { "value": "${MAX_DELEGATION_ROUNDS=3}" },
+    "subagentsPerRound": { "value": "${SUBAGENTS_PER_ROUND=3}" },
+    "maxSearchesPerResearcher": { "value": "${MAX_SEARCHES_PER_RESEARCHER=5}" },
+    "researcherMaxCompletionTokens": { "value": "${RESEARCHER_MAX_COMPLETION_TOKENS=0}" },
+    "maxClarifyRounds": { "value": "${MAX_CLARIFY_ROUNDS=3}" }
+  }
+}

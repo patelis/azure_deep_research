@@ -1,0 +1,17 @@
+[project]
+name = "deep-research-frontend"
+version = "0.1.0"
+description = "py-shiny chat UI for the Azure deep research app; imports the backend in-process."
+requires-python = ">=3.11"
+dependencies = [
+    "shiny>=1.2",
+    # In-process import of the backend (resolved from the workspace, not published).
+    "deep-research",
+]
+
+[tool.uv]
+# The frontend is run as a script (uv run shiny run frontend/app.py), not built/installed.
+package = false
+
+[tool.uv.sources]
+deep-research = { workspace = true }

@@ -1,0 +1,42 @@
+# uv workspace root. uv is the only environment/package manager for this repo.
+#   uv sync                      # create the shared venv from the committed uv.lock
+#   uv run shiny run frontend/app.py
+#   uv run pytest
+#   uv run python utils/sync_agents.py
+[project]
+name = "azure-deep-research-workspace"
+version = "0.1.0"
+description = "Azure-native deep research app (simplified): py-shiny UI + Foundry-managed agents."
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.uv.workspace]
+members = ["backend", "frontend"]
+
+[tool.uv]
+# The repo root itself is not a Python package — only backend/ and frontend/ are.
+package = false
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "ruff>=0.6",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# B008: Shiny/azure patterns legitimately call factories in argument defaults.
+ignore = ["B008"]
+
+[tool.ruff.lint.per-file-ignores]
+# Scripts intentionally set env before importing the package.
+"utils/*" = ["E402"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["backend/tests"]

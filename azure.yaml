@@ -1,0 +1,30 @@
+# Azure Developer CLI (azd) configuration.
+#   azd up                    # provision infra (Bicep) + build/push image + deploy the Shiny app
+#   azd env get-values > .env # export endpoints/connection strings for local runs
+name: azure-deep-research
+metadata:
+  template: azure-deep-research@0.2.0
+infra:
+  provider: bicep
+  path: infra/bicep
+  module: main
+services:
+  app:
+    project: .
+    language: python
+    host: containerapp
+    docker:
+      path: Dockerfile
+      context: .
+      # Build on Azure (ACR Tasks) — no local Docker needed (suits WSL2 + the CI path).
+      remoteBuild: true
+
+# After deploy: create/update the three Foundry agents from the markdown prompts (idempotent,
+# matched by name). A single `azd up` yields a working app; CI re-runs this on every push to main.
+hooks:
+  postdeploy:
+    posix:
+      shell: sh
+      run: uv run python utils/sync_agents.py
+      continueOnError: false
+      interactive: false

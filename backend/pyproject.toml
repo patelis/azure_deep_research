@@ -1,0 +1,33 @@
+[project]
+name = "deep-research"
+version = "0.1.0"
+description = "Azure-native deep research backend: Foundry-managed agents + Azure OpenAI Responses API, with OpenTelemetry tracing. Imported in-process by the py-shiny frontend."
+requires-python = ">=3.11"
+dependencies = [
+    # Azure OpenAI Responses API (clarifier, lead orchestrator, report writer).
+    "openai>=1.60",
+    # Foundry Agent Service runtime (lead, researcher, report agents): create/update + run.
+    "azure-ai-projects>=1.0.0",
+    "azure-ai-agents>=1.0.0",
+    "azure-identity>=1.19",
+    # Email the report via Azure Communication Services.
+    "azure-communication-email>=1.0.0",
+    # Optional per-user key store (keyless Table Storage) when API_KEY_STORE=table.
+    "azure-data-tables>=12.5",
+    # Observability.
+    "azure-monitor-opentelemetry>=1.6",
+    "opentelemetry-instrumentation-openai-v2>=2.0b0",
+    # Schemas / config / prompt loading.
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "python-frontmatter>=1.1",
+    "python-dotenv>=1.0",
+    "httpx>=0.27",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/deep_research"]
