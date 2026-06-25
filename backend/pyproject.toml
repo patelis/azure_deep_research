@@ -10,6 +10,8 @@ dependencies = [
     "azure-ai-projects>=1.0.0",
     "azure-ai-agents>=1.0.0",
     "azure-identity>=1.19",
+    # Async HTTP transport required by the .aio Azure clients (AgentsClient.aio + identity.aio).
+    "aiohttp>=3.9",
     # Email the report via Azure Communication Services.
     "azure-communication-email>=1.0.0",
     # Optional per-user key store (keyless Table Storage) when API_KEY_STORE=table.

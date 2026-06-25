@@ -45,11 +45,11 @@ class Settings(BaseSettings):
 
     # --- Orchestration caps (cost guards) ---
     # Hard ceiling on researcher sub-agents per run (code-enforced).
-    max_subagents_per_run: int = Field(default=5, alias="MAX_SUBAGENTS_PER_RUN")
+    max_subagents_per_run: int = Field(default=15, alias="MAX_SUBAGENTS_PER_RUN")
     # Concurrency cap on researchers (semaphore).
     max_parallel_researchers: int = Field(default=3, alias="MAX_PARALLEL_RESEARCHERS")
     # How many times the lead may re-plan/delegate.
-    max_delegation_rounds: int = Field(default=3, alias="MAX_DELEGATION_ROUNDS")
+    max_delegation_rounds: int = Field(default=5, alias="MAX_DELEGATION_ROUNDS")
     # Max subtasks the lead may request in a single delegation round.
     subagents_per_round: int = Field(default=3, alias="SUBAGENTS_PER_ROUND")
     # SOFT cap on researcher web searches: injected into the researcher prompt (managed Bing
@@ -59,6 +59,9 @@ class Settings(BaseSettings):
     researcher_max_completion_tokens: int = Field(
         default=0, alias="RESEARCHER_MAX_COMPLETION_TOKENS"
     )
+    # Throttle resilience: retry a researcher run on 429/rate-limit with exponential backoff.
+    researcher_max_retries: int = Field(default=3, alias="RESEARCHER_MAX_RETRIES")
+    researcher_retry_base_seconds: float = Field(default=2.0, alias="RESEARCHER_RETRY_BASE_SECONDS")
     # Interactive clarification turns before a plan is produced regardless.
     max_clarify_rounds: int = Field(default=3, alias="MAX_CLARIFY_ROUNDS")
 
@@ -81,7 +84,8 @@ class Settings(BaseSettings):
     api_keys: str = Field(default="", alias="API_KEYS")
     azure_table_endpoint: str = Field(default="", alias="AZURE_TABLE_ENDPOINT")
     api_keys_table: str = Field(default="apikeys", alias="API_KEYS_TABLE")
-    max_runs_per_key_per_day: int = Field(default=3, alias="MAX_RUNS_PER_KEY_PER_DAY")
+    # Per-key daily research-run cap (cost guard). 0 = unlimited.
+    max_runs_per_key_per_day: int = Field(default=25, alias="MAX_RUNS_PER_KEY_PER_DAY")
 
     # --- Email (Azure Communication Services) ---
     acs_connection_string: str = Field(default="", alias="ACS_CONNECTION_STRING")

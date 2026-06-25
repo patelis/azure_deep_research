@@ -70,16 +70,16 @@ param containerImage string = ''
 @description('Allowed access keys as name:sha256hash, comma-separated (empty = gate disabled).')
 param apiKeys string = ''
 
-@description('Per-key daily cap on research runs (cost guard).')
-param maxRunsPerKeyPerDay int = 3
+@description('Per-key daily cap on research runs (cost guard). 0 = unlimited.')
+param maxRunsPerKeyPerDay int = 10
 
 @description('Use a Table Storage key store (per-request lookup + durable counts) instead of the API_KEYS env list.')
 param enableApiKeyTable bool = false
 
 // --- Orchestration caps (cost guards) ---
-param maxSubagentsPerRun int = 5
+param maxSubagentsPerRun int = 15
 param maxParallelResearchers int = 3
-param maxDelegationRounds int = 3
+param maxDelegationRounds int = 5
 param subagentsPerRound int = 3
 param maxSearchesPerResearcher int = 5
 param researcherMaxCompletionTokens int = 0

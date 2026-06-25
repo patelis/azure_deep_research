@@ -32,7 +32,9 @@ similar information.
 </Search budget>
 
 <Output>
-Write your findings as clear markdown: the key facts and insights, organized under short headings
-or bullets, with the source URLs you used inline. Do not pad — be comprehensive but concise. Note
-explicitly if you could not find solid information on part of the topic.
+Write **thorough, detailed** findings as markdown — this feeds a deep-research report, so depth
+matters. Capture all relevant facts, figures, dates, named entities, quotes, and nuances you found,
+organized under headings, with the source URL inline next to each claim. Prefer completeness over
+brevity (but no filler or repetition). Aim for several substantive paragraphs, not a few bullets.
+Note explicitly if you could not find solid information on part of the topic.
 </Output>

@@ -206,14 +206,16 @@ then creates the agents. The app URL is output as `SERVICE_APP_URI`.
 | Setting | Default | Purpose |
 |---|---|---|
 | `MAIN_MODEL` / `MINI_MODEL` | `gpt-4.1` / `gpt-4.1-mini` | clarifier·lead·report / researcher |
-| `MAX_SUBAGENTS_PER_RUN` | `5` | hard ceiling on researchers per run |
+| `MAX_SUBAGENTS_PER_RUN` | `15` | hard ceiling on researchers per run |
 | `MAX_PARALLEL_RESEARCHERS` | `3` | concurrency semaphore |
-| `MAX_DELEGATION_ROUNDS` | `3` | lead re-planning rounds |
+| `MAX_DELEGATION_ROUNDS` | `5` | lead re-planning rounds |
 | `SUBAGENTS_PER_ROUND` | `3` | max subtasks per round |
 | `MAX_SEARCHES_PER_RESEARCHER` | `5` | **soft** per-researcher search budget (prompt) |
 | `RESEARCHER_MAX_COMPLETION_TOKENS` | `0` | per-researcher token cap (0 = unset) |
+| `RESEARCHER_MAX_RETRIES` | `3` | retry a researcher run on 429/rate-limit |
+| `RESEARCHER_RETRY_BASE_SECONDS` | `2.0` | exponential-backoff base for retries |
 | `MAX_CLARIFY_ROUNDS` | `3` | clarifying turns before a plan is forced |
-| `MAX_RUNS_PER_KEY_PER_DAY` | `3` | per-key daily run cap (cost guard) |
+| `MAX_RUNS_PER_KEY_PER_DAY` | `25` | per-key daily run cap (cost guard); 0 = unlimited |
 | `API_KEY_STORE` / `API_KEYS` | `env` / *(empty)* | access-key store and key list |
 | `BING_CONNECTION_ID`, `AZURE_AI_PROJECT_ENDPOINT`, `AZURE_OPENAI_ENDPOINT`, `ACS_*` | from IaC | endpoints / connections |
 | `TRACE_CONTENT` | `false` | capture prompt/completion content in spans (privacy) |

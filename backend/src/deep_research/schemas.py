@@ -74,6 +74,7 @@ class TaskFinding(BaseModel):
     task: str
     summary: str
     ok: bool = True
+    error: str = ""  # the failure reason when ok is False
 
 
 class LeadSynthesis(BaseModel):
@@ -92,3 +93,4 @@ class ResearchResult:
     summary: str
     sources: list[str] = field(default_factory=list)
     ok: bool = True  # False when the researcher could not complete (e.g. throttling)
+    error: str = ""  # the failure reason when ok is False

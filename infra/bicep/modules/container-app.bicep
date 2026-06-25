@@ -85,7 +85,9 @@ resource app 'Microsoft.App/containerApps@2024-03-01' = {
         targetPort: 8000
         transport: 'auto'
         // Sticky sessions: keep a reconnecting browser on the replica holding its ExtendedTask.
-        affinity: 'sticky'
+        stickySessions: {
+          affinity: 'sticky'
+        }
       }
       registries: empty(acrLoginServer) ? [] : [
         {

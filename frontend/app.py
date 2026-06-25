@@ -8,6 +8,7 @@ refreshing the page loses the in-progress research (quick-demo posture).
 
 from __future__ import annotations
 
+import logging
 import threading
 
 from deep_research import keystore
@@ -17,6 +18,8 @@ from deep_research.observability import setup_observability
 from deep_research.pipeline import run_research
 from deep_research.schemas import ResearchPlan
 from shiny import App, reactive, render, ui
+
+logger = logging.getLogger(__name__)
 
 setup_observability()
 
@@ -242,7 +245,14 @@ def server(input, output, session):  # noqa: ANN001
             phase.set("report")
         elif status == "error":
             phase.set("plan_review")
-            ui.notification_show("Research failed — please try again.", type="error")
+            # Surface the real exception (it's also captured in the OpenTelemetry traces).
+            try:
+                research_task.result()
+                detail = "unknown error"
+            except Exception as exc:  # noqa: BLE001 - show the cause to the user
+                detail = f"{type(exc).__name__}: {exc}"
+                logger.exception("Research run failed")
+            ui.notification_show(f"Research failed: {detail}", type="error", duration=None)
 
     # --- report + email ------------------------------------------------------
     @render.ui

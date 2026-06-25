@@ -70,13 +70,13 @@ async def write_report(synthesis: LeadSynthesis) -> ReportResult:
 
     markdown = _ensure_sources_section(result.text, sources)
 
-    incomplete = [f.task for f in synthesis.findings if not f.ok]
+    incomplete = [f for f in synthesis.findings if not f.ok]
     if incomplete:
-        markdown += (
-            "\n\n> _Completeness note: the following sub-topics could not be fully researched "
-            "(e.g. temporary rate limits): "
-            + "; ".join(incomplete)
-            + ". The report reflects the information that was gathered._\n"
-        )
+        lines = ["\n\n> _Completeness note: the following sub-topics could not be fully researched"]
+        lines.append("> (the report reflects what was gathered):_")
+        for f in incomplete:
+            reason = (f.error or "unknown error").splitlines()[0][:200]
+            lines.append(f">   - {f.task} — {reason}")
+        markdown += "\n".join(lines) + "\n"
 
     return ReportResult(markdown=markdown, sources=sources)

@@ -130,5 +130,7 @@ def _compact(plan: ResearchPlan, results: list[ResearchResult]) -> LeadSynthesis
         for url in r.sources:
             if url not in sources:
                 sources.append(url)
-    findings = [TaskFinding(task=r.topic, summary=r.summary, ok=r.ok) for r in results]
+    findings = [
+        TaskFinding(task=r.topic, summary=r.summary, ok=r.ok, error=r.error) for r in results
+    ]
     return LeadSynthesis(objective=plan.objective, findings=findings, sources=sources)
